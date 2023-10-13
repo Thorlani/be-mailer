@@ -71,7 +71,7 @@ app.get("/", (req, res) => {
 app.get("/send_mail", async (req, res) => {
   const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
   const sender = {
-    email: "tolanipopoola07@gmail.com",
+    email: process.env.MY_EMAIL,
     name: "Gareth Vady",
   };
   const receivers = [
