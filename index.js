@@ -19,10 +19,6 @@ const authRoute = require("./routes/auth");
 
 const uri = process.env.DB_CONNECTION;
 
-// mongoose.connect(uri, { useNewUrlParser: true }, () =>
-//   console.log("connected to db")
-// );
-
 const connectToMongo = async () => {
   await mongoose.connect(uri);
   console.log("Connected to MongoDB");
@@ -35,55 +31,28 @@ const defaultClient = SibApiV3Sdk.ApiClient.instance;
 var apiKey = defaultClient.authentications["api-key"];
 apiKey.apiKey = process.env.EMAIL_API_KEY;
 
-// function sendEmail() {
-//   return new Promise((resolve, reject) => {
-//     let transporter = nodemailer.createTransport({
-//       host: "smtp-relay.sendinblue.com",
-//       port: "587",
-//       auth: {
-//         user: process.env.MY_EMAIL,
-//         pass: process.env.SMPT_PASSWORD,
-//       },
-//     });
-
-//     const mail_configs = {
-//       from: "Gatsby",
-//       to: "tolanipopoola07@gmail.com",
-//       subject: "Hello Tolani",
-//       text: "Thank you for subscribing to our platform",
-//     };
-//     transporter.sendMail(mail_configs, function (error, info) {
-//       if (error) {
-//         console.log(error);
-//         return reject({ message: "An error occured" });
-//       }
-//       return resolve({ message: "Email sent successfully" });
-//     });
-//   });
-// }
-
-app.use("/api/user", authRoute);
-
 app.get("/", (req, res) => {
   res.send("Mailer is running on port 5000");
 });
 
-app.get("/send_mail", async (req, res) => {
+app.use("/api/user", authRoute);
+
+app.post("/api/send_mail", async (req, res) => {
   const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
   const sender = {
-    email: process.env.MY_EMAIL,
-    name: "Gareth Vady",
+    email: "tolanipopoola07@gmail.com",
+    name: `${req.body.senderFirstName + " " + req.body.senderLastName}`,
   };
   const receivers = [
     {
-      email: req.body.email,
+      email: req.body.recipientEmail,
     },
   ];
   try {
     const sendEmail = await apiInstance.sendTransacEmail({
       sender,
       to: receivers,
-      subject: `FOLLOW UP`,
+      subject: req.body.subject,
       textContent: "Test Email",
       htmlContent: `
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -99,7 +68,7 @@ app.get("/send_mail", async (req, res) => {
                     <tbody>
                       <tr>
                         <td>
-                          <p style="font-size:16px;line-height:26px;margin:16px 0;font-family:&#x27;Open Sans&#x27;, &#x27;HelveticaNeue-Light&#x27;, &#x27;Helvetica Neue Light&#x27;, &#x27;Helvetica Neue&#x27;, Helvetica, Arial, &#x27;Lucida Grande&#x27;, sans-serif;font-weight:300;color:#404040">Hi ${req.body.firstname},</p>
+                          <p style="font-size:16px;line-height:26px;margin:16px 0;font-family:&#x27;Open Sans&#x27;, &#x27;HelveticaNeue-Light&#x27;, &#x27;Helvetica Neue Light&#x27;, &#x27;Helvetica Neue&#x27;, Helvetica, Arial, &#x27;Lucida Grande&#x27;, sans-serif;font-weight:300;color:#404040">Hi ${req.body.recipientFirstname},</p>
                           <p style="font-size:16px;line-height:26px;margin:16px 0;font-family:&#x27;Open Sans&#x27;, &#x27;HelveticaNeue-Light&#x27;, &#x27;Helvetica Neue Light&#x27;, &#x27;Helvetica Neue&#x27;, Helvetica, Arial, &#x27;Lucida Grande&#x27;, sans-serif;font-weight:300;color:#404040">Do remember to do your assignments on time and do not do it late.
                           <p style="font-size:16px;line-height:26px;margin:16px 0;font-family:&#x27;Open Sans&#x27;, &#x27;HelveticaNeue-Light&#x27;, &#x27;Helvetica Neue Light&#x27;, &#x27;Helvetica Neue&#x27;, Helvetica, Arial, &#x27;Lucida Grande&#x27;, sans-serif;font-weight:300;color:#404040">To keep your account secure, please don&#x27;t forward this email to anyone. See our Help Center for</p>
                           <p style="font-size:16px;line-height:26px;margin:16px 0;font-family:&#x27;Open Sans&#x27;, &#x27;HelveticaNeue-Light&#x27;, &#x27;Helvetica Neue Light&#x27;, &#x27;Helvetica Neue&#x27;, Helvetica, Arial, &#x27;Lucida Grande&#x27;, sans-serif;font-weight:300;color:#404040">Hope you are enjoying my service?</p>
@@ -119,9 +88,6 @@ app.get("/send_mail", async (req, res) => {
     console.log(error);
     return res.send(error);
   }
-  //   sendEmail()
-  //     .then((res) => console.log(res))
-  //     .catch((err) => res.status(500));
 });
 
 app.listen(PORT, () => {
