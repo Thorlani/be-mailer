@@ -40,7 +40,7 @@ app.use("/api/user", authRoute);
 app.post("/api/send_mail", async (req, res) => {
   const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
   const sender = {
-    email: "tolanipopoola07@gmail.com",
+    email: process.env.MY_EMAIL,
     name: `${req.body.senderFirstName + " " + req.body.senderLastName}`,
   };
   const receivers = [
