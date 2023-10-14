@@ -61,13 +61,13 @@ app.post("/api/send_mail", async (req, res) => {
         
           <head></head>
         
-          <body style="background-color:#ffffff;padding:10px 0">
+          <body style="background-color:#ffffff;padding:10px 0,">
               <tr style="width:100%">
                   <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                     <tbody>
                       <tr>
                         <td>
-                          <p style="font-size:16px;line-height:26px;margin:16px 0;font-family:&#x27;Open Sans&#x27;, &#x27;HelveticaNeue-Light&#x27;, &#x27;Helvetica Neue Light&#x27;, &#x27;Helvetica Neue&#x27;, Helvetica, Arial, &#x27;Lucida Grande&#x27;, sans-serif;font-weight:300;color:#404040">Hi ${req.body.recipientFirstname},</p>
+                          <p style="margin:16px 0;">Hi ${req.body.recipientFirstname},</p>
                           ${req.body.message}
                         </td>
                       </tr>
