@@ -41,7 +41,7 @@ app.post("/api/send_mail", async (req, res) => {
   const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
   const sender = {
     email: req.body.senderEmail,
-    name: `${req.body.senderFirstName + " " + req.body.senderLastName}`,
+    name: req.body.senderName,
   };
   const receivers = [
     {
