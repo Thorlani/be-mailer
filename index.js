@@ -80,13 +80,11 @@ app.post("/api/send_mail", async (req, res) => {
         `,
     });
     return res.send(
-      sendEmail,
-      `Mail successfully sent to ${req.body.recipientEmail}`
+      sendEmail
     );
   } catch (error) {
     console.log(error);
-    // return res.send(error);
-    return res.send(`Mail not sent to ${req.body.recipientEmail}`);
+    return res.send(error);
   }
 });
 
